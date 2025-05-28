@@ -5,9 +5,8 @@ const BuilderCanvas = ({ elements, setElements, selectedId, setSelectedId }) => 
   const [draggingId, setDraggingId] = useState(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
 
-  // Mouse down on element to start drag
   const handleMouseDown = (e, id) => {
-    e.stopPropagation(); // prevent deselect
+    e.stopPropagation();
     setSelectedId(id);
 
     const el = elements.find((el) => el.id === id);
@@ -22,7 +21,6 @@ const BuilderCanvas = ({ elements, setElements, selectedId, setSelectedId }) => 
     setDraggingId(id);
   };
 
-  // Mouse move during drag
   const handleMouseMove = (e) => {
     if (!draggingId) return;
 
@@ -33,34 +31,26 @@ const BuilderCanvas = ({ elements, setElements, selectedId, setSelectedId }) => 
     let newX = e.clientX - canvasRect.left - dragOffset.x;
     let newY = e.clientY - canvasRect.top - dragOffset.y;
 
-    // Clamp positions to keep element inside canvas boundaries
     newX = Math.max(0, Math.min(newX, canvasRect.width - el.width));
     newY = Math.max(0, Math.min(newY, canvasRect.height - el.height));
 
     setElements((prev) =>
       prev.map((el) =>
         el.id === draggingId
-          ? {
-              ...el,
-              x: newX,
-              y: newY,
-            }
+          ? { ...el, x: newX, y: newY }
           : el
       )
     );
   };
 
-  // Mouse up to stop drag
   const handleMouseUp = () => {
     setDraggingId(null);
   };
 
-  // Clicking empty canvas area deselects any selected element
   const handleCanvasClick = () => {
     setSelectedId(null);
   };
 
-  // Drop new element from palette on canvas
   const handleDrop = (e) => {
     e.preventDefault();
     const type = e.dataTransfer.getData("type");
@@ -71,13 +61,14 @@ const BuilderCanvas = ({ elements, setElements, selectedId, setSelectedId }) => 
     const newElement = {
       id: Date.now().toString(),
       type,
-      content: type === "text" ? "New Text" : type === "button" ? "Button" : "",
       x,
       y,
-      width: 150,
-      height: 40,
+      width: type === "image" ? 150 : 150,
+      height: type === "image" ? 100 : 40,
       color: "#000000",
       backgroundColor: "#ffffff",
+      content: type === "text" ? "New Text" : type === "button" ? "Button" : "",
+      src: type === "image" ? "/default.jpg" : undefined,
     };
 
     setElements((prev) => [...prev, newElement]);
@@ -128,17 +119,13 @@ const BuilderCanvas = ({ elements, setElements, selectedId, setSelectedId }) => 
                 onMouseDown={(e) => handleMouseDown(e, el.id)}
                 style={{
                   ...style,
-                  cursor: "move",
-                  backgroundColor: el.backgroundColor,
-                  color: el.color,
                   fontWeight: "600",
-                  userSelect: "none",
                 }}
-                type="button"
               >
                 {el.content || "Button"}
               </button>
             );
+
           case "input":
             return (
               <input
@@ -147,9 +134,6 @@ const BuilderCanvas = ({ elements, setElements, selectedId, setSelectedId }) => 
                 onMouseDown={(e) => handleMouseDown(e, el.id)}
                 style={{
                   ...style,
-                  cursor: "move",
-                  backgroundColor: el.backgroundColor,
-                  color: el.color,
                   paddingLeft: "8px",
                   userSelect: "text",
                 }}
@@ -165,6 +149,25 @@ const BuilderCanvas = ({ elements, setElements, selectedId, setSelectedId }) => 
                 placeholder="Input"
               />
             );
+
+          case "image":
+            return (
+              <img
+                key={el.id}
+                src={el.src}
+                alt="Image"
+                onClick={handleClick}
+                onMouseDown={(e) => handleMouseDown(e, el.id)}
+                style={{
+                  ...style,
+                  objectFit: "cover",
+                  padding: 0,
+                  borderRadius: "6px",
+                }}
+                draggable={false}
+              />
+            );
+
           case "text":
           default:
             return (
@@ -172,14 +175,7 @@ const BuilderCanvas = ({ elements, setElements, selectedId, setSelectedId }) => 
                 key={el.id}
                 onClick={handleClick}
                 onMouseDown={(e) => handleMouseDown(e, el.id)}
-                style={{
-                  ...style,
-                  cursor: "move",
-                  backgroundColor: el.backgroundColor,
-                  color: el.color,
-                  paddingLeft: "6px",
-                  userSelect: "text",
-                }}
+                style={style}
                 contentEditable={false}
               >
                 {el.content}

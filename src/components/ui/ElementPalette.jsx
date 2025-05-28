@@ -4,6 +4,7 @@ const elements = [
   { type: "text", label: "Text" },
   { type: "button", label: "Button" },
   { type: "input", label: "Input" },
+  { type: "image", label: "Image" },
 ];
 
 const ElementPalette = ({ onDragStart }) => {

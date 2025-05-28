@@ -48,7 +48,6 @@ const PropertiesPanel = ({ selectedElement, updateElement, darkMode = false }) =
         fontFamily: "Arial, sans-serif",
       }}
     >
-
       {/* Content (for text-like elements) */}
       {["button", "input", "text"].includes(selectedElement.type) && (
         <label style={{ fontSize: 13, display: "block" }}>
@@ -59,6 +58,21 @@ const PropertiesPanel = ({ selectedElement, updateElement, darkMode = false }) =
             value={selectedElement.content ?? ""}
             onChange={handleChange}
             style={inputStyle}
+          />
+        </label>
+      )}
+
+      {/* Image Source URL */}
+      {selectedElement.type === "image" && (
+        <label style={{ fontSize: 13, display: "block" }}>
+          Image URL:
+          <input
+            type="text"
+            name="src"
+            value={selectedElement.src ?? ""}
+            onChange={handleChange}
+            style={inputStyle}
+            placeholder="https://example.com/image.png"
           />
         </label>
       )}
@@ -111,26 +125,28 @@ const PropertiesPanel = ({ selectedElement, updateElement, darkMode = false }) =
         />
       </label>
 
-      {/* Text Color */}
-      <label style={{ fontSize: 13, display: "block" }}>
-        Text Color:
-        <input
-          type="color"
-          name="color"
-          value={selectedElement.color || "#000000"}
-          onChange={handleChange}
-          style={{
-            marginTop: 4,
-            marginBottom: 12,
-            width: "100%",
-            height: 30,
-            border: "none",
-            backgroundColor: "transparent",
-          }}
-        />
-      </label>
+      {/* Text Color (only for text-like elements) */}
+      {["button", "input", "text"].includes(selectedElement.type) && (
+        <label style={{ fontSize: 13, display: "block" }}>
+          Text Color:
+          <input
+            type="color"
+            name="color"
+            value={selectedElement.color || "#000000"}
+            onChange={handleChange}
+            style={{
+              marginTop: 4,
+              marginBottom: 12,
+              width: "100%",
+              height: 30,
+              border: "none",
+              backgroundColor: "transparent",
+            }}
+          />
+        </label>
+      )}
 
-      {/* Background Color */}
+      {/* Background Color (optional for images) */}
       <label style={{ fontSize: 13, display: "block" }}>
         Background Color:
         <input
