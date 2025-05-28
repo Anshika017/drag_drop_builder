@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Builder from "./pages/Builder";
+import Welcome from "./pages/Welcome";
 
 function App() {
   const [darkMode, setDarkMode] = useState(
@@ -15,16 +17,20 @@ function App() {
   };
 
   useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
+    document.documentElement.classList.toggle("dark", darkMode);
   }, [darkMode]);
 
   return (
-    <div className="w-full h-full overflow-hidden bg-white dark:bg-gray-900 text-black dark:text-white transition-colors duration-300">
-      <Builder darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+    <div className="min-h-screen bg-white dark:bg-gray-900 text-black dark:text-white transition-colors duration-300">
+      <Router basename="/drag_drop_builder">
+        <Routes>
+          <Route path="/" element={<Welcome />} />
+          <Route
+            path="/builder"
+            element={<Builder darkMode={darkMode} toggleDarkMode={toggleDarkMode} />}
+          />
+        </Routes>
+      </Router>
     </div>
   );
 }

@@ -1,110 +1,152 @@
 import React from "react";
 
-const PropertiesPanel = ({ selectedElement, updateElement }) => {
+const PropertiesPanel = ({ selectedElement, updateElement, darkMode = false }) => {
   if (!selectedElement) {
     return (
-      <div className="text-sm text-center text-gray-500 dark:text-gray-400">
-        Select an element to see properties
+      <div
+        style={{
+          padding: 10,
+          fontStyle: "italic",
+          textAlign: "center",
+          color: darkMode ? "#94a3b8" : "#6b7280",
+        }}
+      >
+        Select an element to see its properties.
       </div>
     );
   }
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    updateElement(selectedElement.id, {
-      [name]: value,
-    });
+    const newValue = ["x", "y", "width", "height"].includes(name)
+      ? Number(value)
+      : value;
+    updateElement(selectedElement.id, { [name]: newValue });
+  };
+
+  const inputStyle = {
+    width: "100%",
+    marginTop: 4,
+    marginBottom: 12,
+    padding: "6px 8px",
+    borderRadius: 4,
+    border: `1px solid ${darkMode ? "#475569" : "#cbd5e1"}`,
+    backgroundColor: darkMode ? "#1e293b" : "#fff",
+    color: darkMode ? "#f8fafc" : "#000",
   };
 
   return (
-    <div className="space-y-4">
-      {/* Content property */}
-      <div>
-        <label className="block text-sm mb-1">Content</label>
-        {(selectedElement.type === "button" ||
-          selectedElement.type === "input" ||
-          selectedElement.type === "text") && (
+    <div
+      style={{
+        padding: 15,
+        border: `1px solid ${darkMode ? "#334155" : "#e2e8f0"}`,
+        borderRadius: 6,
+        width: "100%",
+        maxWidth: 280,
+        backgroundColor: darkMode ? "#0f172a" : "#f9fafb",
+        color: darkMode ? "#f1f5f9" : "#111827",
+        fontFamily: "Arial, sans-serif",
+      }}
+    >
+
+      {/* Content (for text-like elements) */}
+      {["button", "input", "text"].includes(selectedElement.type) && (
+        <label style={{ fontSize: 13, display: "block" }}>
+          Content:
           <input
             type="text"
             name="content"
-            value={selectedElement.content || ""}
+            value={selectedElement.content ?? ""}
             onChange={handleChange}
-            className="w-full p-2 rounded border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-black dark:text-white"
+            style={inputStyle}
           />
-        )}
-      </div>
+        </label>
+      )}
 
       {/* Position X */}
-      <div>
-        <label className="block text-sm mb-1">Position X</label>
+      <label style={{ fontSize: 13, display: "block" }}>
+        Position X:
         <input
           type="number"
           name="x"
-          value={selectedElement.x}
+          value={selectedElement.x ?? 0}
           onChange={handleChange}
-          className="w-full p-2 rounded border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-black dark:text-white"
+          style={inputStyle}
         />
-      </div>
+      </label>
 
       {/* Position Y */}
-      <div>
-        <label className="block text-sm mb-1">Position Y</label>
+      <label style={{ fontSize: 13, display: "block" }}>
+        Position Y:
         <input
           type="number"
           name="y"
-          value={selectedElement.y}
+          value={selectedElement.y ?? 0}
           onChange={handleChange}
-          className="w-full p-2 rounded border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-black dark:text-white"
+          style={inputStyle}
         />
-      </div>
+      </label>
 
       {/* Width */}
-      <div>
-        <label className="block text-sm mb-1">Width</label>
+      <label style={{ fontSize: 13, display: "block" }}>
+        Width:
         <input
           type="number"
           name="width"
-          value={selectedElement.width}
+          value={selectedElement.width ?? 100}
           onChange={handleChange}
-          className="w-full p-2 rounded border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-black dark:text-white"
+          style={inputStyle}
         />
-      </div>
+      </label>
 
       {/* Height */}
-      <div>
-        <label className="block text-sm mb-1">Height</label>
+      <label style={{ fontSize: 13, display: "block" }}>
+        Height:
         <input
           type="number"
           name="height"
-          value={selectedElement.height}
+          value={selectedElement.height ?? 30}
           onChange={handleChange}
-          className="w-full p-2 rounded border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-black dark:text-white"
+          style={inputStyle}
         />
-      </div>
+      </label>
 
-      {/* Color */}
-      <div>
-        <label className="block text-sm mb-1">Text Color</label>
+      {/* Text Color */}
+      <label style={{ fontSize: 13, display: "block" }}>
+        Text Color:
         <input
           type="color"
           name="color"
-          value={selectedElement.color}
+          value={selectedElement.color || "#000000"}
           onChange={handleChange}
-          className="w-full h-8 p-0 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 cursor-pointer"
+          style={{
+            marginTop: 4,
+            marginBottom: 12,
+            width: "100%",
+            height: 30,
+            border: "none",
+            backgroundColor: "transparent",
+          }}
         />
-      </div>
+      </label>
 
       {/* Background Color */}
-      <div>
-        <label className="block text-sm mb-1">Background Color</label>
+      <label style={{ fontSize: 13, display: "block" }}>
+        Background Color:
         <input
           type="color"
           name="backgroundColor"
-          value={selectedElement.backgroundColor}
+          value={selectedElement.backgroundColor || "#ffffff"}
           onChange={handleChange}
-          className="w-full h-8 p-0 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 cursor-pointer"
+          style={{
+            marginTop: 4,
+            width: "100%",
+            height: 30,
+            border: "none",
+            backgroundColor: "transparent",
+          }}
         />
-      </div>
+      </label>
     </div>
   );
 };

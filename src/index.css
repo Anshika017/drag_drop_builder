@@ -1,12 +1,13 @@
-
 @import "tw-animate-css";
 
+/* Custom variant for dark mode (assuming you have this plugin or feature set up) */
 @custom-variant dark (&:is(.dark *));
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Root variables and global styles */
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -20,6 +21,8 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* Custom CSS variables */
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -54,6 +57,7 @@
   --sidebar-ring: oklch(0.708 0 0);
 }
 
+/* Link styles */
 a {
   font-weight: 500;
   color: #646cff;
@@ -63,15 +67,17 @@ a:hover {
   color: #535bf2;
 }
 
+/* Body styles (empty, but can add if needed) */
 body {
-
 }
 
+/* Headings */
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
 }
 
+/* Buttons */
 button {
   border-radius: 8px;
   border: 1px solid transparent;
@@ -91,6 +97,7 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+/* Light color scheme override */
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
@@ -104,6 +111,7 @@ button:focus-visible {
   }
 }
 
+/* Custom theme inline variables for convenience */
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -142,6 +150,7 @@ button:focus-visible {
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+/* Dark mode overrides */
 .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
@@ -176,10 +185,14 @@ button:focus-visible {
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* Tailwind base layer overrides */
 @layer base {
+  /* Apply border and outline styles universally */
   * {
     @apply border-border outline-ring/50;
   }
+
+  /* Apply background and text color from variables */
   body {
     @apply bg-background text-foreground;
   }
